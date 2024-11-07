@@ -1,0 +1,57 @@
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.common.action_chains import ActionChains
+from selenium.webdriver.chrome.service import Service
+from webdriver_manager.chrome import ChromeDriverManager
+import time
+
+# Initialize the WebDriver
+driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()))
+
+# Open Facebook
+driver.get("https://www.facebook.com/")
+
+# Give the page some time to load
+time.sleep(2)
+
+# Login to Facebook
+username = "your_facebook_email"
+password = "your_facebook_password"
+
+email_input = driver.find_element(By.ID, "email")
+password_input = driver.find_element(By.ID, "pass")
+
+email_input.send_keys(username)
+password_input.send_keys(password)
+password_input.send_keys(Keys.RETURN)
+
+# Wait for the login to complete
+time.sleep(5)
+
+# Find the text box for posting a message (the "What's on your mind?" box)
+status_box = driver.find_element(By.XPATH, "//div[contains(@aria-label, 'What\'s on your mind')]")
+
+# Click on the status box to open it
+status_box.click()
+
+# Wait for the input area to appear
+time.sleep(2)
+
+# Type your message
+message = "Hello, this is a test post from Selenium!"
+status_box = driver.find_element(By.XPATH, "//div[contains(@aria-label, 'What\'s on your mind')]/following-sibling::div//div[@role='textbox']")
+status_box.send_keys(message)
+
+# Wait for a moment
+time.sleep(2)
+
+# Find and click the "Post" button
+post_button = driver.find_element(By.XPATH, "//span[text()='Post']/ancestor::button")
+post_button.click()
+
+# Wait for the post to be published
+time.sleep(5)
+
+# Close the browser
+driver.quit()
